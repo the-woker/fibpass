@@ -11,37 +11,31 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
-      cross = pkgs.pkgsCross.mingwW64;
     in
     {
       packages.${system}.default = pkgs.stdenv.mkDerivation {
-        pname = "fib";
+        pname = "fibpass";
         version = "1.0";
-        src = pkgs.lib.cleanSource ./.;
+        src = pkgs.lib.cleanSourceWith {
+          filter =
+            name: type:
+            let
+              base = baseNameOf name;
+            in
+            base != "build" && base != ".build";
+          src = ./.;
+        };
 
         nativeBuildInputs = with pkgs; [
           cmake
+        ];
+        buildInputs = [
+          pkgs.libxcrypt
         ];
         cmakeFlags = [
           "-DCMAKE_BUILD_TYPE=Release"
 
           "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-        ];
-      };
-
-      windows = cross.stdenv.mkDerivation {
-        pname = "fib";
-        version = "1.0";
-        src = pkgs.lib.cleanSource ./.;
-
-        nativeBuildInputs = [
-          cross.buildPackages.cmake
-        ];
-
-        cmakeFlags = [
-          "-DCMAKE_BUILD_TYPE=Release"
-          "-DCMAKE_SYSTEM_NAME=Windows"
-          "-DCMAKE_EXE_LINKER_FLAGS=-static"
         ];
       };
 
@@ -57,6 +51,7 @@
         buildInputs = with pkgs; [
           cmake
           gcc
+          libxcrypt
         ];
       };
     };
