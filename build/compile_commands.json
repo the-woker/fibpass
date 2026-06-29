@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/ratjerky/cpp/fibpass/build",
-  "command": "/nix/store/vr15iyyykg9zai6fpgvhcgyw7gckl78w-gcc-wrapper-14.3.0/bin/g++ -I/home/ratjerky/cpp/fibpass/include -std=gnu++20 -o CMakeFiles/fibpass.dir/src/main.cpp.o -c /home/ratjerky/cpp/fibpass/src/main.cpp",
-  "file": "/home/ratjerky/cpp/fibpass/src/main.cpp",
-  "output": "/home/ratjerky/cpp/fibpass/build/CMakeFiles/fibpass.dir/src/main.cpp.o"
-}
-]
