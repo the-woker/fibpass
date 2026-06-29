@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
   char *password_hash = crypt(password_input.c_str(), generated_salt);
 
   if (password_hash != nullptr) {
+    std::cout << fib_result << std::endl;
     std::cout << password_hash << std::endl;
   } else {
     std::cerr << "Error: Encryption failed." << std::endl;
