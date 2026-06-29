@@ -31,7 +31,7 @@ uint64_t fib(int terms) {
       seq.push_back(seq[i - 1] + seq[i - 2]);
     }
   }
-  return seq[seq.size()];
+  return seq[seq.size() - 1];
 }
 
 int main(int argc, char *argv[]) {
