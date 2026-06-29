@@ -1,13 +1,10 @@
 #include <cctype>
+#include <crypt.h>
 #include <cstdint>
 #include <iostream>
 #include <numeric>
 #include <string>
 #include <vector>
-
-#if __linux__
-#include <crypt.h>
-#endif
 
 int wordToIntScore(const std::string &word) {
   int totalScore = 0;
@@ -33,6 +30,13 @@ uint64_t fib(int terms) {
   }
   return seq[seq.size() - 1];
 }
+std::string truncateToEightDigits(uint64_t val) {
+  std::string str = std::to_string(val);
+  if (str.length() > 8) {
+    return str.substr(0, 8);
+  }
+  return str;
+}
 
 int main(int argc, char *argv[]) {
   std::string word{};
@@ -46,7 +50,7 @@ int main(int argc, char *argv[]) {
 
   int terms = wordToIntScore(word);
   uint64_t fib_result = fib(terms);
-  std::string password_input = std::to_string(fib_result);
+  std::string password_input = truncateToEightDigits(fib_result);
 
   char salt_buffer[CRYPT_GENSALT_OUTPUT_SIZE];
   char *generated_salt = crypt_gensalt(nullptr, 0, nullptr, 0);
