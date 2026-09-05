@@ -2,15 +2,17 @@
 #include <crypt.h>
 #include <cstdint>
 #include <iostream>
-#include <numeric>
+#include <ostream>
 #include <string>
-#include <vector>
 
 int wordToIntScore(const std::string &word) {
   int totalScore = 0;
   for (char ch : word) {
-    if (std::isalpha(ch)) {
-      totalScore += (std::tolower(ch) - 'a' + 1);
+    auto u_ch = static_cast<unsigned char>(ch);
+    if (std::isalpha(u_ch)) {
+      totalScore += (std::tolower(u_ch) - 'a' + 1);
+    } else if (std::isdigit(u_ch)) {
+      totalScore += ch - '0';
     }
   }
   return totalScore;
@@ -19,23 +21,17 @@ int wordToIntScore(const std::string &word) {
 uint64_t fib(int terms) {
   if (terms <= 0)
     return 0;
-  std::vector<uint64_t> seq;
-  seq.reserve(terms);
-  for (int i = 0; i < terms; ++i) {
-    if (i < 2) {
-      seq.push_back(1);
-    } else {
-      seq.push_back(seq[i - 1] + seq[i - 2]);
-    }
+  if (terms == 1 || terms == 2)
+    return 1;
+  uint64_t a = 1;
+  uint64_t b = 1;
+  uint64_t c = 1;
+  for (int i = 3; i <= terms; ++i) {
+    c = a + b;
+    a = b;
+    b = c;
   }
-  return seq[seq.size() - 1];
-}
-std::string truncateToEightDigits(uint64_t val) {
-  std::string str = std::to_string(val);
-  if (str.length() > 8) {
-    return str.substr(0, 8);
-  }
-  return str;
+  return c;
 }
 
 int main(int argc, char *argv[]) {
@@ -50,7 +46,14 @@ int main(int argc, char *argv[]) {
 
   int terms = wordToIntScore(word);
   uint64_t fib_result = fib(terms);
-  std::string password_input = truncateToEightDigits(fib_result);
+
+  while (fib_result > 99999999) {
+    std::string result_str = std::to_string(fib_result);
+    int new_terms = wordToIntScore(result_str);
+    fib_result = fib(new_terms);
+  }
+
+  std::string password_input = std::to_string(fib_result);
 
   char salt_buffer[CRYPT_GENSALT_OUTPUT_SIZE];
   char *generated_salt = crypt_gensalt(nullptr, 0, nullptr, 0);
