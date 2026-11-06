@@ -2,6 +2,8 @@
 #include <crypt.h>
 #include <cstdint>
 #include <iostream>
+#include <iterator>
+#include <numeric>
 #include <ostream>
 #include <string>
 
@@ -42,6 +44,14 @@ int main(int argc, char *argv[]) {
 	} else {
 		std::cerr << "Usage: " << argv[0] << " <word>" << std::endl;
 		return 1;
+	}
+
+	char alphabet[26];
+	std::iota(std::begin(alphabet), std::end(alphabet), 'a');
+
+	for (char &c : word) {
+		int i = c - 'a';
+		c = alphabet[(i + 23) % 26];
 	}
 
 	int terms = wordToIntScore(word);
